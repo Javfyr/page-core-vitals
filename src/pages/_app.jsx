@@ -5,17 +5,30 @@ import { useState } from 'react';
 const initialReportData = [
   {
     id: 1,
-    name: 'First Contentful Paint (FCP)',
-    description: 'The time it takes for a page to start displaying content',
-    score: 2.1,
-    maxScore: 3,
+    category: 'Performance',
+    name: '/route1',
+    score: 85,
+    lcp: 2.1,
+    cls: 0.01,
+    fid: 75,
   },
   {
     id: 2,
-    name: 'Performance',
-    description: 'The overall performance score of the page',
+    category: 'Accessibility',
+    name: '/route2',
+    score: 90,
+    lcp: 2.0,
+    cls: 0.01,
+    fid: 80,
+  },
+  {
+    id: 3,
+    category: 'Overview',
+    name: '/route3',
     score: 85,
-    maxScore: 100,
+    lcp: 2.1,
+    cls: 0.01,
+    fid: 75,
   },
   // other core web vitals data here...
 ];
