@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ScoreDoughnut from './ScoreDoughnut';
 
-const CoreVitalsReport = ({ reportData, onRescan, isLoading }) => {
+const CoreVitalsReport = ({ reportData, onRescan }) => {
   const [selectedCategory, setSelectedCategory] = useState('Overview');
   const categories = [
     'Overview',
@@ -9,6 +9,64 @@ const CoreVitalsReport = ({ reportData, onRescan, isLoading }) => {
     'Accessibility',
     'Best Practices',
   ];
+
+  const getCategoryColumns = (category) => {
+    if (
+      !reportData ||
+      reportData.length === 0 ||
+      !reportData[0].categories[category]
+    ) {
+      return ['Route'];
+    }
+
+    const categoryKeys = Object.keys(reportData[0].categories[category]);
+    return category === 'Overview'
+      ? ['Route', 'Score']
+      : ['Route', ...categoryKeys];
+  };
+
+  const getCategoryData = (routeData, category) => {
+    if (category === 'Overview') {
+      const doughnuts = categories.slice(1).map((cat) => {
+        if (routeData.categories[cat]) {
+          return (
+            <div className='mr-2' style={{ flex: '0 0 auto' }}>
+              <ScoreDoughnut
+                key={cat}
+                score={routeData.categories[cat].score}
+                category={cat}
+              />
+            </div>
+          );
+        }
+        return null;
+      });
+
+      const overviewData = [
+        routeData.route,
+        <div className='flex'>{doughnuts}</div>,
+      ];
+
+      return overviewData;
+    }
+
+    return getCategoryColumns(category).map((column) => {
+      if (column === 'Route') {
+        return routeData.route;
+      }
+
+      if (column === 'score') {
+        return (
+          <ScoreDoughnut
+            score={routeData.categories[category][column]}
+            category={category}
+          />
+        );
+      }
+
+      return routeData.categories[category][column];
+    });
+  };
 
   return (
     <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 font-sans bg-gray-800 text-white h-full'>
@@ -34,51 +92,41 @@ const CoreVitalsReport = ({ reportData, onRescan, isLoading }) => {
         <div className='col-span-4 bg-gray-700 rounded-md p-0'>
           <div className='p-4'>
             <h2 className='text-lg font-medium'>{selectedCategory} Report</h2>
-            <table className='w-full mt-4 table-fixed'>
-              <thead>
-                <tr>
-                  <th className='w-1/5 px-4 text-left'>Route Name</th>
-                  <th className='w-1/5 px-4 text-left'>Score</th>
-                  <th className='w-1/5 px-4 text-left'>LCP</th>
-                  <th className='w-1/5 px-4 text-left'>CLS</th>
-                  <th className='w-1/5 px-4 text-left'>FID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reportData
-                  .filter((data) => data.category === selectedCategory)
-                  .map((data, index) => (
-                    <tr
-                      key={data.id}
-                      className={`${index % 2 === 0 ? 'bg-gray-600' : ''}`}
-                    >
-                      <td className='px-4 text-left'>{data.name}</td>
-                      <td className='px-4 text-left flex items-center'>
-                        <div>{data.score}</div>
-                        <div className='ml-4'>
-                          <ScoreDoughnut score={data.score} />
-                        </div>
-                      </td>
-                      <td className='px-4 text-left'>{data.lcp}</td>
-                      <td className='px-4 text-left'>{data.cls}</td>
-                      <td className='px-4 text-left'>{data.fid}</td>
+            <div className='overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700'>
+              <table className='mt-2 w-full'>
+                <thead>
+                  <tr>
+                    {getCategoryColumns(selectedCategory).map((column) => (
+                      <th key={column} className='text-left py-2 px-4'>
+                        {column}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {reportData.map((routeData) => (
+                    <tr key={routeData.id}>
+                      {getCategoryData(routeData, selectedCategory).map(
+                        (data, index) => (
+                          <td key={index} className='py-2 px-4'>
+                            {data}
+                          </td>
+                        )
+                      )}
                     </tr>
                   ))}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
+            <button
+              className='mt-4 px-4 py-2 bg-blue-500 text-white rounded'
+              onClick={onRescan}
+            >
+              Rescan
+            </button>
           </div>
         </div>
       </div>
-
-      <button
-        onClick={onRescan}
-        disabled={isLoading}
-        className={`mt-4 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
-          isLoading ? 'opacity-50' : 'opacity-100'
-        }`}
-      >
-        {isLoading ? 'Scanning...' : 'Rescan and Generate New Report'}
-      </button>
     </div>
   );
 };

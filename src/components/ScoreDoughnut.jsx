@@ -5,7 +5,7 @@ import { BarController } from 'chart.js/auto';
 
 Chart.register(BarController);
 
-const ScoreDoughnut = ({ score }) => {
+const ScoreDoughnut = ({ score, category }) => {
   const data = {
     datasets: [
       {
@@ -42,7 +42,17 @@ const ScoreDoughnut = ({ score }) => {
     aspectRatio: 1,
   };
 
-  return <Doughnut data={data} options={options} />;
+  return (
+    <div className='flex flex-col items-center'>
+      <div className='relative'>
+        <Doughnut data={data} options={options} />
+        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+          <h4>{score}</h4>
+        </div>
+      </div>
+      <h4 className='mb-4'>{category}</h4>
+    </div>
+  );
 };
 
 export default ScoreDoughnut;
