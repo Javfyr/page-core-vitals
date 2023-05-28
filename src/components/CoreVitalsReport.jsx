@@ -1,14 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ScoreDoughnut from './ScoreDoughnut';
 
-const CoreVitalsReport = ({ reportData, onRescan }) => {
+const CoreVitalsReport = ({ onRescan }) => {
   const [selectedCategory, setSelectedCategory] = useState('Overview');
+  const [reportData, setReportData] = useState([]);
   const categories = [
     'Overview',
     'Performance',
     'Accessibility',
     'Best Practices',
   ];
+
+  useEffect(() => {
+    fetch('http://localhost:3001/crawl')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const transformedData = [
+          {
+            id: 1,
+            route: '/example-route', // Replace with actual route if available
+            categories: {
+              Performance: {
+                score: data.performanceScore,
+                lcp: data.LCP,
+                cls: data.CLS,
+                tbt: data.TBT,
+              },
+              Accessibility: {score: 0},
+              'Best Practices': {score: 0},
+            },
+          }
+        ];
+  
+        setReportData(transformedData);
+        console.log(reportData);
+      })
+      .catch((error) => {
+        console.error('Error fetching data: ', error);
+      });
+  }, []);
 
   const getCategoryColumns = (category) => {
     if (
