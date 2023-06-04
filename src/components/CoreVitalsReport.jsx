@@ -24,7 +24,7 @@ const CoreVitalsReport = ({ onRescan }) => {
         const transformedData = [
           {
             id: 1,
-            route: '/example-route', // Replace with actual route if available
+            route: '/example-route', // Replace with actual route
             categories: {
               Performance: {
                 score: data.performanceScore,
@@ -32,8 +32,8 @@ const CoreVitalsReport = ({ onRescan }) => {
                 cls: data.CLS,
                 tbt: data.TBT,
               },
-              Accessibility: {score: 0},
-              'Best Practices': {score: 0},
+              SEO: {score: 0},
+              PWA: {score: 0},
             },
           }
         ];
