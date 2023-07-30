@@ -24,20 +24,20 @@ const CoreVitalsReport = ({ onRescan }) => {
         const transformedData = [
           {
             id: 1,
-            route: '/example-route', // Replace with actual route
+            route: '/.wikipedia.org/', // Replace with actual route
             categories: {
               Performance: {
                 score: data.performanceScore,
                 lcp: data.LCP,
                 cls: data.CLS,
-                tbt: data.TBT,
+                fid: data.TBT,
               },
-              SEO: {score: 0},
-              PWA: {score: 0},
+              SEO: { score: 0 },
+              PWA: { score: 0 },
             },
           }
         ];
-  
+
         setReportData(transformedData);
         console.log(reportData);
       })
@@ -114,9 +114,8 @@ const CoreVitalsReport = ({ onRescan }) => {
             {categories.map((category) => (
               <button
                 key={category}
-                className={`block w-full text-left py-2 px-4 rounded ${
-                  selectedCategory === category ? 'bg-gray-600' : ''
-                }`}
+                className={`block w-full text-left py-2 px-4 rounded ${selectedCategory === category ? 'bg-gray-600' : ''
+                  }`}
                 onClick={() => setSelectedCategory(category)}
               >
                 {category}
