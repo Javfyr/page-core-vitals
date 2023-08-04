@@ -24,7 +24,7 @@ const CoreVitalsReport = ({ onRescan }) => {
         const transformedData = [
           {
             id: 1,
-            route: '/.wikipedia.org/', // Replace with actual route
+            route: '/.reddit.com/', // Replace with actual route
             categories: {
               Performance: {
                 score: data.performanceScore,
@@ -153,12 +153,12 @@ const CoreVitalsReport = ({ onRescan }) => {
                 </tbody>
               </table>
             </div>
-            <button
+            {/* <button
               className='mt-4 px-4 py-2 bg-blue-500 text-white rounded'
               onClick={onRescan}
             >
               Rescan
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
